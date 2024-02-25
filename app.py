@@ -30,12 +30,12 @@ def signup():
 
 # picture change page
 @app.route('/change-pfp')
-def signup():
+def change_pfp():
     return render_template('change-pfp.html')
 
 # account deletion page
 @app.route('/delete-account')
-def signup():
+def delete_account():
     return render_template('delete-account.html')
 
 # run app
