@@ -1,7 +1,12 @@
 from flask import Flask, render_template, redirect
+from flask_pymongo import PyMongo
 
 # create app
 app = Flask(__name__)
+
+# configure MongoDB connection
+#app.config['MONGO_URI'] = ''  # Update with actual MongoDB URI
+#mongo = PyMongo(app)
 
 # home page redirects to login page
 @app.route('/')
@@ -17,6 +22,9 @@ def login():
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
+    # users = mongo.db.users
+    # user_data = users.find_one({'username': username}) Example query, replace with dynamic username
+    # return render_template('profile.html', user=user_data)
 
 # picture history page
 @app.route('/history')
