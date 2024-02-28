@@ -4,8 +4,16 @@
         <meta charset="UTF-8">
         <title>{% block title %} {% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
+        <script src="../static/scripts.js"></script>
     </head>
     <body>
+        <select id="redirectDropdown" onchange="redirectToSelected('redirectDropdown')">
+            <option value="">Select a page</option>
+            <option value="/login">Login</option>
+            <option value="/signup">Sign Up</option>
+            <option value="/logout">Log Out</option>
+        </select>
+
         <div class="content">
             {% block content %} {% endblock %}
         </div>
