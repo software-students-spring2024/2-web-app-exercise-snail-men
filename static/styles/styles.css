@@ -1,0 +1,12 @@
+body {
+    background-color: gainsboro;
+}
+
+.content {
+    width: 75%;
+    margin: auto;
+    margin-top: 80px;
+    padding: 10%;
+    background-color: azure;
+    font: 1em sans-serif;
+}
