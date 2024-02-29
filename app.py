@@ -68,6 +68,17 @@ def change_pfp():
 def delete_account():
     return render_template('delete-account.html')
 
+# Error pages
+@app.errorhandler(404)
+@app.errorhandler(500)
+def error_page(error):
+    error_code = error.code
+    if error_code == 404:
+        error_description = "Page not found"
+    else:
+        error_description = "Internal server error"
+    return render_template('error.html', error_code=error_code, error_description=error_description), error_code
+
 # run app
 if __name__ == '__main__':
     app.run()
