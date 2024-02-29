@@ -12,6 +12,12 @@ load_dotenv()  # take environment variables from .env.
 
 # create app
 app = Flask(__name__)
+app.secret_key = 'Gauss'
+
+#Setup login
+login_manager = flask_login.LoginManager()
+
+login_manager.init_app(app)
 
 # connect to the database
 cxn = pymongo.MongoClient(os.getenv("MONGO_URI"))
@@ -29,6 +35,29 @@ try:
 except Exception as e:
     # the ping command failed, so the connection is not available.
     print(" * MongoDB connection error:", e)  # debug
+
+class User(flask_login.UserMixin):
+    pass
+
+@login_manager.user_loader
+def user_loader(username):
+    if db.Users.find_one({"username": username}) == None:
+        return
+
+    user = User()
+    user.id = "username"
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    username = request.form.get("username")
+    if db.Users.find_one({"username": username}) == None:
+        return
+
+    user = User()
+    user.id = "username"
+    return user
 
 # home page redirects to login page
 @app.route('/')
@@ -54,8 +83,15 @@ def history():
     return render_template('history.html')
 
 # account creation page
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        if db.Users.find_one({"username": username}) != None:
+            return render_template('signup.html') #Username taken, should display error
+        else:
+            db.Users.insert_one({"username": username})
+            return redirect('/login') #add user and send them to sign in
     return render_template('signup.html')
 
 # picture change page
