@@ -1,12 +1,34 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+import pymongo
+from bson.objectid import ObjectId
+from dotenv import load_dotenv
+import flask_login
+import os
+
+load_dotenv()  # take environment variables from .env.
 
 # create app
 app = Flask(__name__)
 
-# configure MongoDB connection
-#app.config['MONGO_URI'] = ''  # Update with actual MongoDB URI
-#mongo = PyMongo(app)
+# connect to the database
+cxn = pymongo.MongoClient(os.getenv("MONGO_URI"))
+db = cxn[os.getenv("MONGO_DB")]  # store a reference to the database
+
+#print(os.getenv("MONGO_DB"))
+#print(os.getenv("MONGO_URI"))
+#print(db.Users.find_one())
+#print(db.Users.insert_one({"username": "Gez G"}))
+
+try:
+    # verify the connection works by pinging the database
+    cxn.admin.command("ping")  # The ping command is cheap and does not require auth.
+    print(" *", "Connected to MongoDB!")  # if we get here, the connection worked!
+except Exception as e:
+    # the ping command failed, so the connection is not available.
+    print(" * MongoDB connection error:", e)  # debug
 
 # home page redirects to login page
 @app.route('/')
