@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Login page</h1>
-    <form action="/profile">
+    <form action="/login" method="post"> <!-- Change action to /login and method to post -->
         Username: <input type="text" name="username">
         Password: <input type="password" name="password">
         <input type="submit">
