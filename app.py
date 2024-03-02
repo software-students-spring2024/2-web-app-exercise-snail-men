@@ -106,9 +106,14 @@ def signup():
     return render_template('signup.html')
 
 # picture change page
-@app.route('/change-pfp')
+@app.route('/change-pfp', methods=['GET', 'POST'])
 def change_pfp():
-    return render_template('change-pfp.html')
+    if request.method == 'POST':
+        link = request.form.get('link')
+        db.Images.insert_one({"link": link})
+        return redirect('/profile')
+    else:
+        return render_template('change-pfp.html')
 
 # account deletion page
 @app.route('/delete-account')
