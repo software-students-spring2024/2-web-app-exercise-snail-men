@@ -86,15 +86,17 @@ def login():
         password = request.form.get('password')
         # Add your authentication logic here
         account = db.Users.find_one({"username": username})
-        if account != None and account["passHash"] == sha256(password.encode('utf-8')).hexdigest():
-            user = User()
-            user.id = username
-            flask_login.login_user(user)
-            return redirect(url_for('profile', profileName = username))
+        if account != None:
+            if account["passHash"] == sha256(password.encode('utf-8')).hexdigest():
+                user = User()
+                user.id = username
+                flask_login.login_user(user)
+                return redirect(url_for('profile', profileName = username))
+            else:
+                return render_template('login.html', username_dne = False, wrong_pw = True)
         # For demonstration, redirect to profile page after login
-        return redirect('/login')
-
-    return render_template('login.html')
+        return render_template('login.html', username_dne = True, wrong_pw = False)
+    return render_template('login.html', username_dne = False, wrong_pw = False)
 
 # profile page
 @app.route('/profile/<profileName>')
@@ -136,7 +138,7 @@ def signup():
         else:
             db.Users.insert_one({"username": username, "passHash": sha256(password.encode('utf-8')).hexdigest(), "currentPFP": "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"})
             return redirect('/login') #add user and send them to sign in
-    return render_template('signup.html')
+    return render_template('signup.html', username_taken = True)
 
 # picture change page
 @app.route('/change-pfp', methods=['GET', 'POST'])
