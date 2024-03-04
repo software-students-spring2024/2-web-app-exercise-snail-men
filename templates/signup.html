@@ -1,10 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Account creation page</h1>
-    <form method="post">
-        Username: <input type="text" name="username">
-        Password: <input type="password" name="password">
-        <input type="submit">
+    <h1>Create an Account</h1>
+    <form id="signup-form" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            <input type="checkbox" id="showPasswordToggle">
+            <label for="showPasswordToggle">Show Password</label>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password">
+            <input type="checkbox" id="showConfirmPasswordToggle">
+            <label for="showConfirmPasswordToggle">Show Password</label>
+            <p id="password-error" style="color: red; display: none;">Passwords do not match.</p>
+        </div>
+        <input type="submit" value="Sign Up">
     </form>
+    
+
+    <script>
+        let passwordInput = document.getElementById("password");
+        let confirmPasswordInput = document.getElementById("confirm-password");
+        let showPasswordToggle = document.getElementById("showPasswordToggle");
+        let showConfirmPasswordToggle = document.getElementById("showConfirmPasswordToggle");
+        let passwordError = document.getElementById("password-error");
+
+        showPasswordToggle.addEventListener("change", function() {
+            if (showPasswordToggle.checked) {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        });
+
+        showConfirmPasswordToggle.addEventListener("change", function() {
+            if (showConfirmPasswordToggle.checked) {
+                confirmPasswordInput.type = "text";
+            } else {
+                confirmPasswordInput.type = "password";
+            }
+        });
+
+        document.getElementById("signup-form").addEventListener("submit", function(event) {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                passwordError.style.display = "block";
+                event.preventDefault(); 
+            } else {
+                passwordError.style.display = "none";
+            }
+        });
+    </script>
+    
 {% endblock %}

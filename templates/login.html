@@ -10,7 +10,22 @@
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
+            <input type="checkbox" id="showPasswordToggle">
+            <label for="showPasswordToggle">Show Password</label>
         </div>
         <input type="submit" value="Login">
     </form>
+
+    <script>
+        let passwordInput = document.getElementById("password");
+        let showPasswordToggle = document.getElementById("showPasswordToggle");
+
+        showPasswordToggle.addEventListener("change", function() {
+            if (showPasswordToggle.checked) {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        });
+    </script>
 {% endblock %}

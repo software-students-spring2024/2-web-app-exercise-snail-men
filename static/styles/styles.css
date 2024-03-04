@@ -48,7 +48,7 @@ header {
     border-radius: 4px;
 }
 
-.login-form {
+form {
     width: 80%;
     max-width: 400px;
     margin: 0 auto;
@@ -70,6 +70,11 @@ input[type="password"] {
     border-radius: 4px;
     box-sizing: border-box;
 }
+
+input[type="checkbox"] + label {
+    display: inline-block;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
