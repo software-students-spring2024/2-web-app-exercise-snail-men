@@ -2,13 +2,9 @@
 
 {% block content %}
     <h1>History</h1>
-    <ul>
+    <ul class = "picList">
       {% for pic in pics %}
-        <li><img src= "{{ pic }}" alt="Image Description"></li>
+        <li><img src= "{{ pic }}" alt="Previous Photo" height = "100" width="100"></li>
       {% endfor %}
     </ul>
-        {% for picture in pics %}
-        <li class="picture">{{picture}}</li>
-        {% endfor %}
-      </ul>
 {% endblock %}

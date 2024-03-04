@@ -46,7 +46,7 @@ class User(flask_login.UserMixin):
 def inject_username():
     if hasattr(flask_login.current_user, "id"):
         return dict(username=flask_login.current_user.id)
-    return dict(username = "Not signed in")
+    return dict(username=None)
 
 
 
@@ -101,7 +101,7 @@ def login():
 def profile(profileName):
     user = db.Users.find_one({'username': profileName})
     pic = user['currentPFP']
-    return render_template('profile.html', pic = pic)
+    return render_template('profile.html', pic = pic, profileName = profileName)
     # users = mongo.db.users
     # user_data = users.find_one({'username': username}) Example query, replace with dynamic username
     # return render_template('profile.html', user=user_data)
