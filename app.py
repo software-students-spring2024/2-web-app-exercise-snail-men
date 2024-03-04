@@ -22,7 +22,7 @@ login_manager.init_app(app)
 # connect to the database
 cxn = pymongo.MongoClient(os.getenv("MONGO_URI"))
 db = cxn[os.getenv("MONGO_DB")]  # store a reference to the database
-
+print(db)
 #print(os.getenv("MONGO_DB"))
 #print(os.getenv("MONGO_URI"))
 #print(db.Users.find_one())
@@ -66,7 +66,18 @@ def index():
 
 # login page
 @app.route('/login')
+# login page
+@app.route('/login', methods=['GET', 'POST'])  # Add methods=['GET', 'POST']
 def login():
+    if request.method == 'POST':
+        # Process login form data
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # Add your authentication logic here
+
+        # For demonstration, redirect to profile page after login
+        return redirect('/profile')
+
     return render_template('login.html')
 
 # profile page
