@@ -152,7 +152,7 @@ def change_pfp():
             "details": {"newPictureLink": link}
         })
         """
-        return redirect('/profile')
+        return redirect(url_for('profile', profileName = username))
     else:
         return render_template('change-pfp.html')
 

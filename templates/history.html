@@ -3,8 +3,8 @@
 {% block content %}
     <h1>History</h1>
     <ul>
-        {% for record in history %}
-        <li>{{ record.timestamp }} - {{ record.action }} - Details: {{ record.details.newPictureLink }}</li>
-        {% endfor %}
-      </ul>
+      {% for pic in pics %}
+        <li><img src= "{{ pic }}" alt="Image Description"></li>
+      {% endfor %}
+    </ul>
 {% endblock %}
