@@ -2,11 +2,14 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from datetime import datetime
+
 import pymongo
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import flask_login
 import os
+from hashlib import sha256
 
 load_dotenv()  # take environment variables from .env.
 
@@ -39,13 +42,21 @@ except Exception as e:
 class User(flask_login.UserMixin):
     pass
 
+@app.context_processor
+def inject_username():
+    if hasattr(flask_login.current_user, "id"):
+        return dict(username=flask_login.current_user.id)
+    return dict(username=None)
+
+
+
 @login_manager.user_loader
 def user_loader(username):
     if db.Users.find_one({"username": username}) == None:
         return
 
     user = User()
-    user.id = "username"
+    user.id = username
     return user
 
 
@@ -56,7 +67,7 @@ def request_loader(request):
         return
 
     user = User()
-    user.id = "username"
+    user.id = username
     return user
 
 # home page redirects to login page
@@ -74,46 +85,86 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         # Add your authentication logic here
-
+        account = db.Users.find_one({"username": username})
+        if account != None and account["passHash"] == sha256(password.encode('utf-8')).hexdigest():
+            user = User()
+            user.id = username
+            flask_login.login_user(user)
+            return redirect(url_for('profile', profileName = username))
         # For demonstration, redirect to profile page after login
-        return redirect('/profile')
+        return redirect('/login')
 
     return render_template('login.html')
 
 # profile page
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
+@app.route('/profile/<profileName>')
+def profile(profileName):
+    user = db.Users.find_one({'username': profileName})
+    pic = user['currentPFP']
+    return render_template('profile.html', pic = pic, profileName = profileName)
     # users = mongo.db.users
     # user_data = users.find_one({'username': username}) Example query, replace with dynamic username
     # return render_template('profile.html', user=user_data)
 
 # picture history page
-@app.route('/history')
-def history():
-    return render_template('history.html')
+@app.route('/history/<profileName>')
+def history(profileName):
+    pics = db.Images.find({'username': profileName})
+    picList = [pic['link'] for pic in pics]
+    return render_template('history.html', pics = picList)
+    #username = flask_login.current_user.id 
+    #user_history = list(db.History.find({"username": username}).sort("timestamp", -1))
+    #return render_template('history.html', history=user_history)
+    
 
 # account creation page
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form.get('username')
+        password = request.form.get('password')
         if db.Users.find_one({"username": username}) != None:
             return render_template('signup.html') #Username taken, should display error
         else:
-            db.Users.insert_one({"username": username})
+            db.Users.insert_one({"username": username, "passHash": sha256(password.encode('utf-8')).hexdigest(), "currentPFP": "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"})
             return redirect('/login') #add user and send them to sign in
     return render_template('signup.html')
 
 # picture change page
-@app.route('/change-pfp')
+@app.route('/change-pfp', methods=['GET', 'POST'])
+@flask_login.login_required
 def change_pfp():
-    return render_template('change-pfp.html')
+    if request.method == 'POST':
+        username = flask_login.current_user.id
+        link = request.form.get('link')
+        db.Images.insert_one({"link": link, "username": username}) # -> change this to db.Images.insert_one({"username": username, "link": link})
+        db.Users.update_one({"username": username},
+                  { "$set": {
+                             "currentPFP": link
+                             }
+                 })
+        # db.Images.insert_one({"link": link, "username": username})
+        # Record history
+        """db.History.insert_one({
+            "username": username,
+            "action": "Profile Picture Change",
+            "timestamp": datetime.utcnow(),
+            "details": {"newPictureLink": link}
+        })
+        """
+        return redirect(url_for('profile', profileName = username))
+    else:
+        return render_template('change-pfp.html')
 
 # account deletion page
 @app.route('/delete-account')
 def delete_account():
     return render_template('delete-account.html')
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return redirect("/login")
 
 # Error pages
 @app.errorhandler(404)

@@ -7,13 +7,30 @@
         <script src="../static/scripts.js"></script>
     </head>
     <body>
-        <div class="content">
-            <select id="redirectDropdown" onchange="redirectToSelected('redirectDropdown')">
-                <option value="">Select a page</option>
+        <select id="redirectDropdown" onchange="redirectToSelected('redirectDropdown')">
+            <option value="">Select a page</option>
+            {% if not username %}
                 <option value="/login">Login</option>
                 <option value="/signup">Sign Up</option>
-                <option value="/logout">Log Out</option>
-            </select>
+            {% endif %}
+            {% if username %}
+                <option value="/profile/{{ username }}">Profile</option>
+                <option value="/history/{{ username }}">History</option>
+                <option value="/change-pfp">Change Picture</option>
+                <option value="/delete-account">Delete Account</option>
+                <option value="/logout">Logout</option>
+            {% endif %}
+        </select>
+        <div>
+            {% if username %}
+                <p>{{ username }}</p>
+            {% endif %}
+            {% if not username %}
+                <p>Not signed in</p>
+            {% endif %}
+        </div>
+      
+        <div class="content">
             {% block content %} {% endblock %}
         </div>
     </body>
