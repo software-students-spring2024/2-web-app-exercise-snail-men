@@ -92,7 +92,7 @@ def login():
             flask_login.login_user(user)
             return redirect(url_for('profile', profileName = username))
         # For demonstration, redirect to profile page after login
-        return redirect('/login')
+        return redirect('/login', username_dne = True)
 
     return render_template('login.html')
 
