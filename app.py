@@ -157,9 +157,16 @@ def change_pfp():
         return render_template('change-pfp.html')
 
 # account deletion page
-@app.route('/delete-account')
-def delete_account():
-    return render_template('delete-account.html')
+@app.route('/delete', methods=['GET', 'POST'])
+@flask_login.login_required
+def delete():
+    if request.method == 'POST':
+        db.Images.find_one_and_delete({'username': flask_login.current_user.id, "link": request.form.get('deletable')})
+    
+        return redirect('/delete')
+    pics = db.Images.find({'username': flask_login.current_user.id})
+    picList = [pic['link'] for pic in pics]
+    return render_template('delete.html', pics = picList)
 
 @app.route('/logout')
 def logout():
