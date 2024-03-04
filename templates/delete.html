@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <style>
+        .image-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .delete-button {
+            margin-left: 10px;
+        }
+    </style>
+    <h1>Image deletion page</h1>
+    <ul class = "picList">
+        {% for pic in pics %}
+        <div class="image-container">
+            <img src="{{ pic }}" alt="Previous Photo" height="100" width="100">
+            <form method="POST">
+                <input type="hidden" name="deletable" value="{{ pic }}">
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    </ul>
+{% endblock %}

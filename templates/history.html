@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  <style>
+    .image-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .delete-button {
+        margin-left: 10px;
+    }
+  </style>
     <h1>Previously Used Pictures</h1>
     <ul class = "picList">
       {% for pic in pics %}
-        <li><img src= "{{ pic }}" alt="Previous Photo" height = "100" width="100"></li>
+        <div class="image-container">
+          <img src="{{ pic }}" alt="Previous Photo" height="100" width="100">
+          {%if username == profileName%}
+            <form method="POST">
+                <input type="hidden" name="setable" value="{{ pic }}">
+                <button type="submit" class="set-button">Set as Profile</button>
+            </form>
+          {%endif%}
+      </div>
       {% endfor %}
     </ul>
 {% endblock %}
