@@ -9,7 +9,7 @@ flask-pymongo = "*"
 flask-login = "*"
 pymongo = "*"
 python-dotenv = "*"
-hashlib = "*'
+hashlib = "*"
 
 [dev-packages]
 
