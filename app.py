@@ -132,13 +132,11 @@ def signup():
         username = request.form.get('username')
         password = request.form.get('password')
         if db.Users.find_one({"username": username}) != None:
-            username_taken = True
-            return render_template('signup.html', username_taken = username_taken) #Username taken, should display error
+            return render_template('signup.html', username_taken = True) #Username taken, should display error
         else:
-            username_taken = False
             db.Users.insert_one({"username": username, "passHash": sha256(password.encode('utf-8')).hexdigest(), "currentPFP": "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"})
             return redirect('/login') #add user and send them to sign in
-    return render_template('signup.html')
+    return render_template('signup.html', username_taken = False)
 
 # picture change page
 @app.route('/change-pfp', methods=['GET', 'POST'])
