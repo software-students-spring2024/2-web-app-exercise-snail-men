@@ -1,12 +1,8 @@
 {% extends 'profile-settings.html' %}
 
 {% block profile_content %}
-    <h1>Profile information</h1>
-    <p>Here is some information about the user:</p>
+    <h1>{{ profileName }}'s Profile</h1>
     <ul>
-        <!-- Will be done dynamically -->
         <img src={{pic}} alt="Profile Picture", width="100", height="100">
-
-        <li>Name: {{ profileName }}</li>
     </ul>
 {% endblock %}
