@@ -9,10 +9,26 @@
     <body>
         <select id="redirectDropdown" onchange="redirectToSelected('redirectDropdown')">
             <option value="">Select a page</option>
-            <option value="/login">Login</option>
-            <option value="/signup">Sign Up</option>
-            <option value="/logout">Log Out</option>
+            {% if not username %}
+                <option value="/login">Login</option>
+                <option value="/signup">Sign Up</option>
+            {% endif %}
+            {% if username %}
+                <option value="/profile/{{ username }}">Profile</option>
+                <option value="/history/{{ username }}">History</option>
+                <option value="/change-pfp">Change Picture</option>
+                <option value="/delete-account">Delete Account</option>
+                <option value="/logout">Logout</option>
+            {% endif %}
         </select>
+        <div>
+            {% if username %}
+                <p>{{ username }}</p>
+            {% endif %}
+            {% if not username %}
+                <p>Not signed in</p>
+            {% endif %}
+        </div>
 
         <div class="content">
             {% block content %} {% endblock %}

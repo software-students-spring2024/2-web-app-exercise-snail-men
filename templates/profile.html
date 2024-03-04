@@ -7,12 +7,6 @@
         <!-- Will be done dynamically -->
         <img src={{pic}} alt="Profile Picture", width="100", height="100">
 
-        <li>Name: John Doe</li>
-        <li>Email: john@example.com</li>
-
-        <li><a href="/change-pfp">Change Profile Picture</a></li>
-        <li><a href="/history">Previous Profile Pictures</a></li>
-        <li><a href="/delete-account">Delete Account</a></li>
-        <li><a href="/login">Sign out</a></li>
+        <li>Name: {{ profileName }}</li>
     </ul>
 {% endblock %}
