@@ -15,7 +15,7 @@
             {% endif %}
             {% if username %}
                 <option value="/profile/{{ username }}">Profile</option>
-                <option value="/history/{{ username }}">History</option>
+                <option value="/history/{{ username }}">Previous Pictures</option>
                 <option value="/change-pfp">Change Picture</option>
                 <option value="/delete">Delete Pictures</option>
                 <option value="/logout">Logout</option>
@@ -29,7 +29,7 @@
                 <p>Not signed in</p>
             {% endif %}
         </div>
-      
+
         <div class="content">
             {% block content %} {% endblock %}
         </div>
