@@ -107,11 +107,19 @@ def profile(profileName):
     # return render_template('profile.html', user=user_data)
 
 # picture history page
-@app.route('/history/<profileName>')
+@app.route('/history/<profileName>', methods=['GET', 'POST'])
 def history(profileName):
+    currentUser = flask_login.current_user.id
+    if request.method == 'POST':
+        db.Users.update_one({"username": currentUser},
+                  { "$set": {
+                             "currentPFP": request.form.get('setable')
+                             }
+                 })
+        return redirect(url_for('profile', profileName = currentUser))
     pics = db.Images.find({'username': profileName})
     picList = [pic['link'] for pic in pics]
-    return render_template('history.html', pics = picList)
+    return render_template('history.html', pics = picList, profileName = profileName)
     #username = flask_login.current_user.id 
     #user_history = list(db.History.find({"username": username}).sort("timestamp", -1))
     #return render_template('history.html', history=user_history)
@@ -157,9 +165,16 @@ def change_pfp():
         return render_template('change-pfp.html')
 
 # account deletion page
-@app.route('/delete-account')
-def delete_account():
-    return render_template('delete-account.html')
+@app.route('/delete', methods=['GET', 'POST'])
+@flask_login.login_required
+def delete():
+    if request.method == 'POST':
+        db.Images.find_one_and_delete({'username': flask_login.current_user.id, "link": request.form.get('deletable')})
+    
+        return redirect('/delete')
+    pics = db.Images.find({'username': flask_login.current_user.id})
+    picList = [pic['link'] for pic in pics]
+    return render_template('delete.html', pics = picList)
 
 @app.route('/logout')
 def logout():
