@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Change profile picture</h1>
+    <h1>Change Profile Picture</h1>
     <form method="post">
-        Link to photo: <input type="text" name="link">
+        Link a photo: <input type="text" name="link">
         <input type="submit">
     </form>
+    <h3>Or select a picture you're used before <a href="/history/{{username}}">here</a>.</h3>
 {% endblock %}
