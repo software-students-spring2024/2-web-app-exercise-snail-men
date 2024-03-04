@@ -2,9 +2,15 @@
 
 {% block content %}
     <h1>Login page</h1>
-    <form action="/login" method="post"> <!-- Change action to /login and method to post -->
-        Username: <input type="text" name="username">
-        Password: <input type="password" name="password">
-        <input type="submit">
+    <form action="/login" method="post" class="login-form">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <input type="submit" value="Login">
     </form>
 {% endblock %}
