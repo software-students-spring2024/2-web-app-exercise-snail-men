@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Previously used pictures</h1>
-    Select a photo to activate it
-    <!-- Added pictures from database -->
+    <h1>History</h1>
     <ul>
-
-    </ul>
+        {% for record in history %}
+        <li>{{ record.timestamp }} - {{ record.action }} - Details: {{ record.details.newPictureLink }}</li>
+        {% endfor %}
+      </ul>
 {% endblock %}

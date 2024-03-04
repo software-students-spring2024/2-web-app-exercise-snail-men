@@ -2,7 +2,8 @@
 
 {% block profile_content %}
     <h1>Change profile picture</h1>
-    <form>
-        Link to new picture: <input type="text" name="link">
+    <form method="post">
+        Link to photo: <input type="text" name="link">
+        <input type="submit">
     </form>
 {% endblock %}

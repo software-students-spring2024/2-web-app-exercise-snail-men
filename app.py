@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from datetime import datetime
+
 import pymongo
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
@@ -91,6 +93,9 @@ def profile():
 # picture history page
 @app.route('/history')
 def history():
+    #username = flask_login.current_user.id 
+    #user_history = list(db.History.find({"username": username}).sort("timestamp", -1))
+    #return render_template('history.html', history=user_history)
     return render_template('history.html')
 
 # account creation page
@@ -106,9 +111,24 @@ def signup():
     return render_template('signup.html')
 
 # picture change page
-@app.route('/change-pfp')
+@app.route('/change-pfp', methods=['GET', 'POST'])
 def change_pfp():
-    return render_template('change-pfp.html')
+    if request.method == 'POST':
+        # username = flask_login.current_user.id ?
+        link = request.form.get('link')
+        db.Images.insert_one({"link": link}) # -> change this to db.Images.insert_one({"username": username, "link": link})
+
+        # Record history
+        """db.History.insert_one({
+            "username": username,
+            "action": "Profile Picture Change",
+            "timestamp": datetime.utcnow(),
+            "details": {"newPictureLink": link}
+        })
+        """
+        return redirect('/profile')
+    else:
+        return render_template('change-pfp.html')
 
 # account deletion page
 @app.route('/delete-account')
